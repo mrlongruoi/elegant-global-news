@@ -22,7 +22,7 @@ export default {
 			fontFamily: {
 				'serif': ['Georgia', 'Times New Roman', 'serif'],
 				'display': ['Playfair Display', 'Georgia', 'serif'],
-				'sans': ['Helvetica', 'Arial', 'sans-serif'],
+				'sans': ['Source Sans 3', 'Helvetica', 'Arial', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

@@ -2,7 +2,7 @@
 import React from 'react';
 import Layout from '@/components/layout/Layout';
 import HeroSection from '@/components/sections/HeroSection';
-import NewsSection from '@/components/sections/NewsSection';
+import CategorySection from '@/components/sections/CategorySection';
 import { getLatestArticles, getArticlesByCategory, mockArticles } from '@/services/articleService';
 
 const Index = () => {
@@ -21,28 +21,27 @@ const Index = () => {
   return (
     <Layout>
       <div className="container-news">
-        <HeroSection mainArticle={mainArticle} sideArticles={sideArticles} />
+        {/* Featured Stories Section */}
+        <section className="mb-12">
+          <h1 className="text-3xl font-bold font-display mb-8 text-center border-b pb-4">Featured Stories</h1>
+          <HeroSection mainArticle={mainArticle} sideArticles={sideArticles} />
+        </section>
         
-        <hr className="divider" />
-        
-        <NewsSection title="WORLD" articles={worldNews} viewAllLink="/world" />
-        
-        <hr className="divider" />
-        
-        <NewsSection title="POLITICS" articles={politics} viewAllLink="/politics" />
-        
-        <hr className="divider" />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <NewsSection title="BUSINESS" articles={business} viewAllLink="/business" />
-          <NewsSection title="TECHNOLOGY" articles={technology} viewAllLink="/tech" />
-        </div>
-        
-        <hr className="divider" />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <NewsSection title="OPINION" articles={opinion} viewAllLink="/opinion" />
-          <NewsSection title="CULTURE" articles={culture} viewAllLink="/culture" />
+        {/* Main Categories */}
+        <div className="space-y-12">
+          <CategorySection title="WORLD" articles={worldNews} viewAllLink="/world" />
+          
+          <CategorySection title="POLITICS" articles={politics} viewAllLink="/politics" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+            <CategorySection title="BUSINESS" articles={business} viewAllLink="/business" />
+            <CategorySection title="TECHNOLOGY" articles={technology} viewAllLink="/tech" />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+            <CategorySection title="OPINION" articles={opinion} viewAllLink="/opinion" />
+            <CategorySection title="CULTURE" articles={culture} viewAllLink="/culture" />
+          </div>
         </div>
       </div>
     </Layout>
