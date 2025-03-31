@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'serif': ['Georgia', 'Times New Roman', 'serif'],
+				'display': ['Playfair Display', 'Georgia', 'serif'],
+				'sans': ['Helvetica', 'Arial', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -61,6 +67,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				news: {
+					'100': '#f8f8f8',
+					'200': '#e0e0e0',
+					'300': '#c0c0c0',
+					'400': '#909090',
+					'500': '#606060',
+					'600': '#404040',
+					'700': '#202020',
+					'800': '#121212',
+					'900': '#000000',
 				}
 			},
 			borderRadius: {
