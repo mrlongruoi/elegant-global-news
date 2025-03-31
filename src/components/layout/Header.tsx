@@ -93,13 +93,13 @@ export default function Header() {
         ) : null}
         <div className="flex items-center gap-3">
           <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Search"
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2 rounded-full bg-background hover:bg-accent"
             onClick={() => setSearchOpen(true)}
-            className="rounded-full hover:bg-gray-100"
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-4 w-4" />
+            <span className="hidden sm:inline">Search articles</span>
           </Button>
           
           {isAuthenticated ? (
