@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import { Menu, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import SearchDialog from '@/components/search/SearchDialog';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   const navigation = [
     { name: 'Home', href: '/' },
@@ -19,6 +21,7 @@ const Header = () => {
   ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
     <header className="border-b border-news-200">
@@ -28,7 +31,7 @@ const Header = () => {
             <Button variant="ghost" size="icon" onClick={toggleMenu} className="mr-2">
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={toggleSearch}>
               <Search size={20} />
             </Button>
           </div>
@@ -40,8 +43,9 @@ const Header = () => {
           </div>
           
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={toggleSearch} className="transition-all hover:bg-news-100">
               <Search size={20} />
+              <span className="sr-only">Search</span>
             </Button>
           </div>
         </div>
@@ -88,6 +92,9 @@ const Header = () => {
           </div>
         </div>
       </nav>
+      
+      {/* Search Dialog */}
+      <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </header>
   );
 };
