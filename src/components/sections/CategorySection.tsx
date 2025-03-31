@@ -3,14 +3,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ArticleCard, { Article } from '../articles/ArticleCard';
 import { ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface CategorySectionProps {
   title: string;
   articles: Article[];
   viewAllLink?: string;
+  className?: string;
 }
 
-const CategorySection = ({ title, articles, viewAllLink }: CategorySectionProps) => {
+const CategorySection = ({ title, articles, viewAllLink, className }: CategorySectionProps) => {
   if (!articles || articles.length === 0) {
     return null;
   }
@@ -19,8 +21,8 @@ const CategorySection = ({ title, articles, viewAllLink }: CategorySectionProps)
   const secondaryArticles = articles.slice(1, 4);
 
   return (
-    <section className="category-section">
-      <div className="flex items-center justify-between mb-4 border-b border-news-200 pb-2">
+    <section className={cn("bg-white rounded-lg shadow-sm overflow-hidden", className)}>
+      <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-news-200">
         <h2 className="text-lg font-bold text-news-800 tracking-wider">{title}</h2>
         {viewAllLink && (
           <Link 
@@ -32,25 +34,27 @@ const CategorySection = ({ title, articles, viewAllLink }: CategorySectionProps)
         )}
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Featured Article */}
-        <div className="lg:col-span-2">
-          <ArticleCard 
-            article={featuredArticle} 
-            variant="medium" 
-            className="h-full"
-          />
-        </div>
-        
-        {/* Secondary Articles */}
-        <div className="space-y-4 lg:col-span-1">
-          {secondaryArticles.map((article) => (
+      <div className="p-5">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Featured Article */}
+          <div className="lg:col-span-2">
             <ArticleCard 
-              key={article.id} 
-              article={article} 
-              variant="small" 
+              article={featuredArticle} 
+              variant="medium" 
+              className="h-full bg-white p-4 rounded-lg"
             />
-          ))}
+          </div>
+          
+          {/* Secondary Articles */}
+          <div className="space-y-5 lg:col-span-1">
+            {secondaryArticles.map((article) => (
+              <ArticleCard 
+                key={article.id} 
+                article={article} 
+                variant="small" 
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
