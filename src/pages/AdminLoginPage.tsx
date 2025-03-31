@@ -84,9 +84,9 @@ const AdminLoginPage = () => {
                 />
               </div>
               <div className="text-sm text-muted-foreground">
-                <p>Demo credentials:</p>
+{/*                 <p>Demo credentials:</p>
                 <p>Email: admin@newsdaily.com</p>
-                <p>Password: admin123</p>
+                <p>Password: admin123</p> */}
               </div>
             </CardContent>
             <CardFooter>
