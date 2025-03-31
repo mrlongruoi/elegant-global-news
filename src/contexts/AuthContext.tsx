@@ -5,7 +5,7 @@ import { Session, User } from '@supabase/supabase-js';
 import { toast } from 'sonner';
 
 // Define the admin email for easier reference and consistency
-const ADMIN_EMAIL = 'admin@newsdaily.com';
+const ADMIN_EMAIL = 'mrlong01012020@gmail.com';
 
 interface AuthContextType {
   isAuthenticated: boolean;

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
@@ -14,7 +14,7 @@ const AdminLoginPage = () => {
   const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [email, setEmail] = useState('admin@newsdaily.com');
+  const [email, setEmail] = useState('mrlong01012020@gmail.com');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -69,7 +69,7 @@ const AdminLoginPage = () => {
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@newsdaily.com"
+                  placeholder="mrlong01012020@gmail.com"
                   required
                   readOnly
                 />
@@ -88,7 +88,7 @@ const AdminLoginPage = () => {
               </div>
               <div className="text-sm text-muted-foreground">
                 <p>For this demo, you need to create a user in Supabase with:</p>
-                <p>Email: admin@newsdaily.com</p>
+                <p>Email: mrlong01012020@gmail.com</p>
               </div>
             </CardContent>
             <CardFooter>
