@@ -1,18 +1,50 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
-import ArticleCard from '@/components/articles/ArticleCard';
-import { getArticlesByCategory } from '@/services/articleService';
+import ArticleCard, { Article } from '@/components/articles/ArticleCard';
+import { fetchArticlesByCategory } from '@/services/supabaseArticleService';
 import { AnimatedContainer } from '@/components/ui/animated-container';
 import { motion } from 'framer-motion';
 import { cardHoverVariants, pageTransitionVariants } from '@/lib/animations';
 
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const formattedCategory = category ? category.charAt(0).toUpperCase() + category.slice(1) : '';
   
-  const articles = getArticlesByCategory(formattedCategory);
+  useEffect(() => {
+    const loadArticles = async () => {
+      if (!category) return;
+      
+      try {
+        setIsLoading(true);
+        setError(null);
+        const data = await fetchArticlesByCategory(formattedCategory);
+        setArticles(data);
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+        setError('Failed to load articles');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadArticles();
+  }, [category, formattedCategory]);
+  
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="container-news py-12 flex justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-news-600"></div>
+        </div>
+      </Layout>
+    );
+  }
   
   if (!category || articles.length === 0) {
     return (
@@ -63,7 +95,7 @@ const CategoryPage = () => {
               initial="initial"
               whileHover="hover"
             >
-              <ArticleCard key={article.id} article={article} variant="medium" />
+              <ArticleCard article={article} variant="medium" />
             </motion.div>
           ))}
         </AnimatedContainer>

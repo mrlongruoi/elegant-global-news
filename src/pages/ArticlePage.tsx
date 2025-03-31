@@ -1,17 +1,59 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import Layout from '@/components/layout/Layout';
-import { getArticleBySlug, getLatestArticles } from '@/services/articleService';
-import ArticleCard from '@/components/articles/ArticleCard';
+import { fetchArticleBySlug, fetchLatestArticles } from '@/services/supabaseArticleService';
+import ArticleCard, { Article } from '@/components/articles/ArticleCard';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const article = slug ? getArticleBySlug(slug) : undefined;
-  const relatedArticles = getLatestArticles(3);
+  const [article, setArticle] = useState<Article | null>(null);
+  const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
-  if (!article) {
+  useEffect(() => {
+    const loadArticle = async () => {
+      if (!slug) return;
+      
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const articleData = await fetchArticleBySlug(slug);
+        if (articleData) {
+          setArticle(articleData);
+          
+          // Also fetch related articles
+          const latestArticles = await fetchLatestArticles(3);
+          // Filter out the current article if it's in the latest
+          setRelatedArticles(latestArticles.filter(a => a.id !== articleData.id));
+        } else {
+          setError('Article not found');
+        }
+      } catch (err) {
+        console.error('Error fetching article:', err);
+        setError('Failed to load article');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadArticle();
+  }, [slug]);
+  
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="container-news py-12 flex justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-news-600"></div>
+        </div>
+      </Layout>
+    );
+  }
+  
+  if (error || !article) {
     return (
       <Layout>
         <div className="container-news py-12">
@@ -55,32 +97,38 @@ const ArticlePage = () => {
           </div>
           
           <div className="prose max-w-none">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <h2>The Implications</h2>
-            <p>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </p>
-            <p>
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.
-            </p>
-            <blockquote>
-              "The world is changing at an unprecedented pace, and our institutions must adapt to meet these new challenges."
-            </blockquote>
-            <p>
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi.
-            </p>
-            <h2>Looking Ahead</h2>
-            <p>
-              Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.
-            </p>
-            <p>
-              Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.
-            </p>
+            {article.content ? (
+              <div dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br />') }} />
+            ) : (
+              <>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+                <p>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+                <h2>The Implications</h2>
+                <p>
+                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                </p>
+                <p>
+                  Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.
+                </p>
+                <blockquote>
+                  "The world is changing at an unprecedented pace, and our institutions must adapt to meet these new challenges."
+                </blockquote>
+                <p>
+                  At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi.
+                </p>
+                <h2>Looking Ahead</h2>
+                <p>
+                  Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.
+                </p>
+                <p>
+                  Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.
+                </p>
+              </>
+            )}
           </div>
         </div>
         

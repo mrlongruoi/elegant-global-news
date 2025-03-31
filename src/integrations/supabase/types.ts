@@ -9,147 +9,59 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      comments: {
+      articles: {
         Row: {
           author: string
+          category: string
           content: string
           created_at: string
-          id: number
-          parent_comment_id: number | null
-          post_id: number
-          user_id: string
+          id: string
+          image_url: string
+          published_at: string
+          slug: string
+          summary: string
+          title: string
+          updated_at: string
         }
         Insert: {
           author: string
+          category: string
           content: string
           created_at?: string
-          id?: number
-          parent_comment_id?: number | null
-          post_id: number
-          user_id: string
+          id?: string
+          image_url: string
+          published_at?: string
+          slug: string
+          summary: string
+          title: string
+          updated_at?: string
         }
         Update: {
           author?: string
+          category?: string
           content?: string
           created_at?: string
-          id?: number
-          parent_comment_id?: number | null
-          post_id?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comments_parent_comment_id_fkey"
-            columns: ["parent_comment_id"]
-            isOneToOne: false
-            referencedRelation: "comments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      communities: {
-        Row: {
-          created_at: string
-          description: string
-          id: number
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          description: string
-          id?: number
-          name: string
-        }
-        Update: {
-          created_at?: string
-          description?: string
-          id?: number
-          name?: string
+          id?: string
+          image_url?: string
+          published_at?: string
+          slug?: string
+          summary?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
-      }
-      posts: {
-        Row: {
-          avatar_url: string
-          community_id: number | null
-          content: string
-          created_at: string
-          id: number
-          images_url: string
-          title: string
-        }
-        Insert: {
-          avatar_url: string
-          community_id?: number | null
-          content: string
-          created_at?: string
-          id?: number
-          images_url: string
-          title: string
-        }
-        Update: {
-          avatar_url?: string
-          community_id?: number | null
-          content?: string
-          created_at?: string
-          id?: number
-          images_url?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "posts_community_id_fkey"
-            columns: ["community_id"]
-            isOneToOne: false
-            referencedRelation: "communities"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      votes: {
-        Row: {
-          created_at: string
-          id: number
-          post_id: number
-          user_id: string
-          vote: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          post_id: number
-          user_id: string
-          vote: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          post_id?: number
-          user_id?: string
-          vote?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "votes_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      generate_article_slug: {
+        Args: {
+          title: string
+        }
+        Returns: string
+      }
       get_posts_with_counts: {
         Args: Record<PropertyKey, never>
         Returns: {
