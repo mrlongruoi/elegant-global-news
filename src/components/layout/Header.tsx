@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Search } from 'lucide-react';
+import { Menu, Search, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import SearchDialog from '@/components/search/SearchDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
 
 const categories = [
   { name: 'World', href: '/world' },
@@ -22,6 +23,7 @@ export default function Header() {
   const mobile = useIsMobile();
   const location = useLocation();
   const [searchOpen, setSearchOpen] = React.useState(false);
+  const { isAuthenticated } = useAuth();
 
   return (
     <header className="border-b fixed top-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-20">
@@ -89,15 +91,41 @@ export default function Header() {
             </Link>
           </nav>
         ) : null}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
             aria-label="Search"
             onClick={() => setSearchOpen(true)}
+            className="rounded-full hover:bg-gray-100"
           >
             <Search className="h-5 w-5" />
           </Button>
+          
+          {isAuthenticated ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              className="rounded-full hover:bg-gray-100"
+            >
+              <Link to="/admin">
+                <User className="h-5 w-5" />
+                <span className="sr-only">Admin Dashboard</span>
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-sm"
+            >
+              <Link to="/admin/login">
+                Admin Login
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
