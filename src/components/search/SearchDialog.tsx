@@ -20,7 +20,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
   const filteredArticles = searchQuery 
     ? mockArticles.filter(article => 
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.category.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
@@ -80,7 +80,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
                       <span className="text-xs font-semibold text-news-500">{article.category.toUpperCase()}</span>
                       <span className="font-semibold">{article.title}</span>
                       <span className="text-sm text-muted-foreground line-clamp-2">
-                        {article.excerpt}
+                        {article.summary}
                       </span>
                     </div>
                   </CommandItem>
