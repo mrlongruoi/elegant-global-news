@@ -5,7 +5,8 @@ import { Session, User } from '@supabase/supabase-js';
 import { toast } from 'sonner';
 
 // Define the admin email for easier reference and consistency
-const ADMIN_EMAIL = 'mrlong01012020@gmail.com';
+// This is now just a default value, we'll allow other emails through login
+const DEFAULT_ADMIN_EMAIL = 'mrlong01012020@gmail.com';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -72,12 +73,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // Only allow the admin email to log in
-      if (email !== ADMIN_EMAIL) {
-        toast.error('Only admin users can log in');
-        return false;
-      }
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,

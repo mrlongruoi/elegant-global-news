@@ -71,9 +71,8 @@ const AdminLoginPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="mrlong01012020@gmail.com"
                   required
-                  readOnly
                 />
-                <p className="text-xs text-muted-foreground">Admin email is fixed for this demo</p>
+                <p className="text-xs text-muted-foreground">Default admin email pre-filled for convenience</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
