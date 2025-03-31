@@ -88,7 +88,7 @@ const AnimatedContainer = ({
     };
 
     return (
-      <div className={cn(getTailwindAnimationClasses())} {...props}>
+      <div className={cn(getTailwindAnimationClasses())} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
         {staggerChildren ? renderTailwindChildren() : children}
       </div>
     );
