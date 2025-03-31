@@ -12,7 +12,7 @@ interface AuthContextType {
   isLoading: boolean;
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,7 +26,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Get the current session
+        // Set up auth state listener first to avoid missing auth events
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          (event, session) => {
+            if (session) {
+              console.log('Auth state changed:', event, session.user?.email);
+              setUser(session.user);
+              setIsAuthenticated(true);
+            } else {
+              setUser(null);
+              setIsAuthenticated(false);
+            }
+            setIsLoading(false);
+          }
+        );
+
+        // Then check for existing session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -36,35 +51,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (session) {
+          console.log('Existing session found:', session.user?.email);
           setUser(session.user);
           setIsAuthenticated(true);
         }
+        
+        setIsLoading(false);
+
+        return () => {
+          subscription.unsubscribe();
+        };
       } catch (error) {
         console.error('Auth error:', error);
-      } finally {
         setIsLoading(false);
       }
     };
 
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (session) {
-          setUser(session.user);
-          setIsAuthenticated(true);
-        } else {
-          setUser(null);
-          setIsAuthenticated(false);
-        }
-      }
-    );
-
     checkAuth();
-
-    // Cleanup subscription on unmount
-    return () => {
-      subscription.unsubscribe();
-    };
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -82,10 +85,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.error('Login error:', error.message);
+        toast.error(error.message);
         return false;
       }
 
       if (data.user) {
+        console.log('Successfully logged in:', data.user.email);
         return true;
       }
       
@@ -98,9 +103,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Logout error:', error);
+        toast.error('Error logging out');
+      } else {
+        toast.success('Logged out successfully');
+      }
     } catch (error) {
       console.error('Logout error:', error);
+      toast.error('Error logging out');
     }
   };
 

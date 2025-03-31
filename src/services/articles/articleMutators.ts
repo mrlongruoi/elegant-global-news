@@ -13,6 +13,10 @@ const mapArticleData = (article: any): Article => ({
 
 // Create a new article
 export const createArticle = async (article: Omit<Article, 'id' | 'publishedAt'>): Promise<Article> => {
+  // Log current user to debug
+  const { data: { user } } = await supabase.auth.getUser();
+  console.log('Current user creating article:', user);
+
   const { data, error } = await supabase
     .from('articles')
     .insert([
@@ -39,6 +43,10 @@ export const createArticle = async (article: Omit<Article, 'id' | 'publishedAt'>
 
 // Update an existing article
 export const updateArticle = async (id: string, article: Partial<Article>): Promise<Article> => {
+  // Log current user to debug
+  const { data: { user } } = await supabase.auth.getUser();
+  console.log('Current user updating article:', user);
+
   const updateData: any = {};
   
   if (article.title) updateData.title = article.title;
@@ -69,6 +77,10 @@ export const updateArticle = async (id: string, article: Partial<Article>): Prom
 
 // Delete an article
 export const deleteArticle = async (id: string): Promise<void> => {
+  // Log current user to debug
+  const { data: { user } } = await supabase.auth.getUser();
+  console.log('Current user deleting article:', user);
+
   const { error } = await supabase
     .from('articles')
     .delete()

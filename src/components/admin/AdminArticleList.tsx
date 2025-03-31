@@ -23,23 +23,33 @@ import {
 import { toast } from 'sonner';
 import { fetchArticles, deleteArticle } from '@/services/articles';
 import { Article } from '@/components/articles/ArticleCard';
+import { supabase } from '@/integrations/supabase/client';
 
 const AdminArticleList = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch articles when component mounts
   useEffect(() => {
     const loadArticles = async () => {
       try {
         setIsLoading(true);
+        setError(null);
+        
+        // Check auth status
+        const { data: { session } } = await supabase.auth.getSession();
+        console.log('Current session for article list:', session?.user?.email);
+        
         const data = await fetchArticles();
+        console.log('Articles fetched successfully:', data.length);
         setArticles(data);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error loading articles:', error);
-        toast.error('Failed to load articles');
+        setError(error.message || 'Failed to load articles');
+        toast.error('Failed to load articles: ' + (error.message || 'Unknown error'));
       } finally {
         setIsLoading(false);
       }
@@ -63,9 +73,9 @@ const AdminArticleList = () => {
       // Update the state to remove the deleted article
       setArticles(articles.filter(article => article.id !== articleToDelete));
       toast.success('Article deleted successfully');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting article:', error);
-      toast.error('Failed to delete article');
+      toast.error('Failed to delete article: ' + (error.message || 'Unknown error'));
     } finally {
       setDeleteDialogOpen(false);
       setArticleToDelete(null);
@@ -77,7 +87,14 @@ const AdminArticleList = () => {
     <>
       {isLoading && <div className="py-4 text-center">Loading articles...</div>}
       
-      {!isLoading && articles.length === 0 && (
+      {error && !isLoading && (
+        <div className="py-4 text-center text-red-500">
+          <p className="mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+      )}
+      
+      {!isLoading && !error && articles.length === 0 && (
         <div className="py-4 text-center">
           <p className="text-muted-foreground mb-4">No articles found. Create your first article to get started.</p>
           <Button asChild>
@@ -86,7 +103,7 @@ const AdminArticleList = () => {
         </div>
       )}
       
-      {!isLoading && articles.length > 0 && (
+      {!isLoading && !error && articles.length > 0 && (
         <Table>
           <TableHeader>
             <TableRow>
