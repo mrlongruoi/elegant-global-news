@@ -97,6 +97,7 @@ export default function Header() {
             size="sm"
             className="flex items-center gap-2 rounded-full bg-background hover:bg-accent"
             onClick={() => setSearchOpen(true)}
+            aria-label="Search articles"
           >
             <Search className="h-4 w-4" />
             <span className="hidden sm:inline">Search articles</span>

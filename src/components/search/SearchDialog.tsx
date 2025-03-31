@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Button } from '@/components/ui/button';
@@ -88,30 +88,18 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
     setSearchQuery(term);
   };
 
+  // Hide the close button in the CommandInput to avoid duplication
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn("p-0 gap-0 max-w-3xl", slideInAnimation({ direction: "up", duration: 0.3 }))}>
+      <DialogContent className={cn("p-0 gap-0 max-w-3xl", slideInAnimation({ direction: "up", duration: 0.3 }))} closeButtonClassName="hidden">
         <Command className="rounded-lg border-none">
-          <div className="flex items-center border-b px-3">
-            <Search className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
-            <CommandInput 
-              placeholder="Search articles by title, content, or category..." 
-              value={searchQuery}
-              onValueChange={setSearchQuery}
-              className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none"
-              autoFocus
-            />
-            {searchQuery && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setSearchQuery('')}
-                className="h-8 w-8 hover:scale-105 transition-transform"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
+          <CommandInput 
+            placeholder="Search articles by title, content, or category..." 
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+            className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none"
+            autoFocus
+          />
           <CommandList className="max-h-[70vh] overflow-y-auto">
             <CommandEmpty className="py-8 text-center text-sm">
               <div className="space-y-1">
