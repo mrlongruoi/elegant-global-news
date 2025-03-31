@@ -18,12 +18,12 @@ const CategorySection = ({ title, articles, viewAllLink, className }: CategorySe
   }
 
   const featuredArticle = articles[0];
-  const secondaryArticles = articles.slice(1, 4);
+  const secondaryArticles = articles.slice(1, 3); // Only show 2 secondary articles
 
   return (
-    <section className={cn("bg-white rounded-lg shadow-sm overflow-hidden", className)}>
-      <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-news-200">
-        <h2 className="text-lg font-bold text-news-800 tracking-wider">{title}</h2>
+    <section className={cn("mb-8", className)}>
+      <div className="flex items-center justify-between border-b border-news-200 pb-2 mb-6">
+        <h2 className="text-xl font-bold text-news-800 tracking-wider">{title}</h2>
         {viewAllLink && (
           <Link 
             to={viewAllLink} 
@@ -34,27 +34,27 @@ const CategorySection = ({ title, articles, viewAllLink, className }: CategorySe
         )}
       </div>
       
-      <div className="p-5">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Featured Article */}
-          <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-6">
+        {/* Featured Article */}
+        <div className="mb-4">
+          <ArticleCard 
+            article={featuredArticle} 
+            variant="medium" 
+            className="bg-white border-b border-news-100 pb-4"
+            hideCategory={true}
+          />
+        </div>
+        
+        {/* Secondary Articles */}
+        <div className="space-y-5">
+          {secondaryArticles.map((article) => (
             <ArticleCard 
-              article={featuredArticle} 
-              variant="medium" 
-              className="h-full bg-white p-4 rounded-lg"
+              key={article.id} 
+              article={article} 
+              variant="small"
+              hideCategory={true}
             />
-          </div>
-          
-          {/* Secondary Articles */}
-          <div className="space-y-5 lg:col-span-1">
-            {secondaryArticles.map((article) => (
-              <ArticleCard 
-                key={article.id} 
-                article={article} 
-                variant="small" 
-              />
-            ))}
-          </div>
+          ))}
         </div>
       </div>
     </section>

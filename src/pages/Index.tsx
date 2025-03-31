@@ -25,19 +25,28 @@ const Index = () => {
         <HeroSection mainArticle={mainArticle} sideArticles={sideArticles} />
         
         {/* Main Categories */}
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <CategorySection title="WORLD" articles={worldNews} viewAllLink="/world" />
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <CategorySection title="POLITICS" articles={politics} viewAllLink="/politics" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <CategorySection title="BUSINESS" articles={business} viewAllLink="/business" />
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <CategorySection title="TECHNOLOGY" articles={technology} viewAllLink="/tech" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <CategorySection title="OPINION" articles={opinion} viewAllLink="/opinion" />
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <CategorySection title="CULTURE" articles={culture} viewAllLink="/culture" />
           </div>
         </div>
