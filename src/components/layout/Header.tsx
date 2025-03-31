@@ -5,8 +5,8 @@ import { Menu, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import { SearchDialog } from '@/components/search/SearchDialog';
-import { isMobile } from '@/hooks/use-mobile';
+import SearchDialog from '@/components/search/SearchDialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const categories = [
   { name: 'World', href: '/world' },
@@ -19,7 +19,7 @@ const categories = [
 ];
 
 export default function Header() {
-  const mobile = isMobile();
+  const mobile = useIsMobile();
   const location = useLocation();
   const [searchOpen, setSearchOpen] = React.useState(false);
 
