@@ -8,6 +8,7 @@ export interface Article {
   id: string;
   title: string;
   summary: string;
+  content?: string; // Add content property as optional
   category: string;
   author: string;
   publishedAt: Date;

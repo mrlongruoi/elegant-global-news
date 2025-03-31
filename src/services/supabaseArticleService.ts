@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Article } from '@/components/articles/ArticleCard';
 
@@ -14,12 +13,16 @@ export const fetchArticles = async (): Promise<Article[]> => {
     throw error;
   }
 
-  // Convert the Supabase timestamp to JavaScript Date objects
+  // Convert the Supabase timestamp to JavaScript Date objects and map db columns to interface properties
   return data.map(article => ({
     ...article,
     publishedAt: new Date(article.published_at),
     // Ensure the id is a string as expected by the existing components
-    id: article.id.toString()
+    id: article.id.toString(),
+    // Map image_url to imageUrl for the interface
+    imageUrl: article.image_url,
+    // Keep content as is
+    content: article.content
   }));
 };
 
@@ -39,7 +42,9 @@ export const fetchArticlesByCategory = async (category: string): Promise<Article
   return data.map(article => ({
     ...article,
     publishedAt: new Date(article.published_at),
-    id: article.id.toString()
+    id: article.id.toString(),
+    imageUrl: article.image_url,
+    content: article.content
   }));
 };
 
@@ -63,7 +68,9 @@ export const fetchArticleBySlug = async (slug: string): Promise<Article | null> 
   return {
     ...data,
     publishedAt: new Date(data.published_at),
-    id: data.id.toString()
+    id: data.id.toString(),
+    imageUrl: data.image_url,
+    content: data.content
   };
 };
 
@@ -94,7 +101,8 @@ export const createArticle = async (article: Omit<Article, 'id' | 'publishedAt'>
     ...data,
     publishedAt: new Date(data.published_at),
     id: data.id.toString(),
-    imageUrl: data.image_url
+    imageUrl: data.image_url,
+    content: data.content
   };
 };
 
@@ -129,7 +137,8 @@ export const updateArticle = async (id: string, article: Partial<Article>): Prom
     ...data,
     publishedAt: new Date(data.published_at),
     id: data.id.toString(),
-    imageUrl: data.image_url
+    imageUrl: data.image_url,
+    content: data.content
   };
 };
 
@@ -163,7 +172,8 @@ export const fetchLatestArticles = async (count: number = 5): Promise<Article[]>
     ...article,
     publishedAt: new Date(article.published_at),
     id: article.id.toString(),
-    imageUrl: article.image_url
+    imageUrl: article.image_url,
+    content: article.content
   }));
 };
 
