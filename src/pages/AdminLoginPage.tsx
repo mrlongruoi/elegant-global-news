@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -8,13 +8,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { Shield } from 'lucide-react';
 
 const AdminLoginPage = () => {
   const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Get the path user was trying to access before being redirected
+  const from = location.state?.from?.pathname || '/admin';
 
   // If already authenticated, redirect to admin dashboard
   if (isAuthenticated) {
@@ -29,7 +34,8 @@ const AdminLoginPage = () => {
       const success = await login(email, password);
       if (success) {
         toast.success('Login successful!');
-        navigate('/admin');
+        // Navigate to the page they were trying to access, or admin dashboard
+        navigate(from);
       } else {
         toast.error('Invalid email or password');
       }
@@ -46,8 +52,11 @@ const AdminLoginPage = () => {
       <div className="container-news py-12 flex justify-center items-center min-h-[calc(100vh-16rem)]">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-display">Admin Login</CardTitle>
-            <CardDescription>
+            <div className="flex items-center justify-center mb-4">
+              <Shield className="h-10 w-10 text-primary" />
+            </div>
+            <CardTitle className="text-2xl font-display text-center">Admin Login</CardTitle>
+            <CardDescription className="text-center">
               Enter your credentials to access the admin dashboard
             </CardDescription>
           </CardHeader>
@@ -73,6 +82,11 @@ const AdminLoginPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+              </div>
+              <div className="text-sm text-muted-foreground">
+                <p>Demo credentials:</p>
+                <p>Email: admin@newsdaily.com</p>
+                <p>Password: admin123</p>
               </div>
             </CardContent>
             <CardFooter>

@@ -53,12 +53,14 @@ export default function Header() {
                       {category.name}
                     </Link>
                   ))}
-                  <Link
-                    to="/admin"
-                    className="text-lg font-medium transition-colors text-muted-foreground hover:text-foreground mt-4 pt-4 border-t"
-                  >
-                    Admin
-                  </Link>
+                  {isAuthenticated && (
+                    <Link
+                      to="/admin"
+                      className="text-lg font-medium transition-colors text-muted-foreground hover:text-foreground mt-4 pt-4 border-t"
+                    >
+                      Admin
+                    </Link>
+                  )}
                 </div>
               </DrawerContent>
             </Drawer>
@@ -83,12 +85,14 @@ export default function Header() {
                 {category.name}
               </Link>
             ))}
-            <Link
-              to="/admin"
-              className="text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
-            >
-              Admin
-            </Link>
+            {isAuthenticated && (
+              <Link
+                to="/admin"
+                className="text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
+              >
+                Admin
+              </Link>
+            )}
           </nav>
         ) : null}
         <div className="flex items-center gap-3">
