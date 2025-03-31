@@ -1,102 +1,106 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Search, X } from 'lucide-react';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { format } from 'date-fns';
-import SearchDialog from '@/components/search/SearchDialog';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { SearchDialog } from '@/components/search/SearchDialog';
+import { isMobile } from '@/hooks/use-mobile';
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'World', href: '/world' },
-    { name: 'Politics', href: '/politics' },
-    { name: 'Business', href: '/business' },
-    { name: 'Culture', href: '/culture' },
-    { name: 'Tech', href: '/tech' },
-    { name: 'Opinion', href: '/opinion' },
-  ];
+const categories = [
+  { name: 'World', href: '/world' },
+  { name: 'Politics', href: '/politics' },
+  { name: 'Business', href: '/business' },
+  { name: 'Tech', href: '/tech' },
+  { name: 'Science', href: '/science' },
+  { name: 'Culture', href: '/culture' },
+  { name: 'Opinion', href: '/opinion' },
+];
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+export default function Header() {
+  const mobile = isMobile();
+  const location = useLocation();
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   return (
-    <header className="border-b border-news-200">
-      <div className="container-news py-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center md:hidden">
-            <Button variant="ghost" size="icon" onClick={toggleMenu} className="mr-2">
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </Button>
-            <Button variant="ghost" size="icon" onClick={toggleSearch}>
-              <Search size={20} />
-            </Button>
-          </div>
-          
-          <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none">
-            <Link to="/" className="font-display text-center font-bold text-2xl md:text-3xl tracking-tight">
-              GLOBAL TIMES
-            </Link>
-          </div>
-          
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon" onClick={toggleSearch} className="transition-all hover:bg-news-100">
-              <Search size={20} />
-              <span className="sr-only">Search</span>
-            </Button>
-          </div>
+    <header className="border-b fixed top-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-20">
+      <div className="container-news flex h-16 items-center justify-between">
+        <div className="flex items-center gap-2 md:gap-6">
+          {mobile ? (
+            <Drawer direction="left">
+              <DrawerTrigger asChild>
+                <Button size="icon" variant="ghost">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent className="w-3/4 h-full rounded-none pt-16">
+                <div className="flex flex-col space-y-3 p-4">
+                  {categories.map((category) => (
+                    <Link
+                      key={category.href}
+                      to={category.href}
+                      className={cn(
+                        "text-lg font-medium transition-colors",
+                        location.pathname === category.href
+                          ? "text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                  <Link
+                    to="/admin"
+                    className="text-lg font-medium transition-colors text-muted-foreground hover:text-foreground mt-4 pt-4 border-t"
+                  >
+                    Admin
+                  </Link>
+                </div>
+              </DrawerContent>
+            </Drawer>
+          ) : null}
+          <Link to="/" className="font-display text-xl md:text-2xl font-bold">
+            NewsDaily
+          </Link>
         </div>
-        
-        <div className="flex justify-between items-center text-sm py-2">
-          <div className="hidden md:block text-news-500">
-            {format(new Date(), 'EEEE, MMMM d, yyyy')}
-          </div>
-          <div className="md:hidden text-news-500 text-xs">
-            {format(new Date(), 'MMM d, yyyy')}
-          </div>
-        </div>
-      </div>
-      
-      {/* Mobile menu */}
-      <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
-        <nav className="container-news py-4 space-y-3">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className="block px-2 py-2 text-lg border-b border-news-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
-        </nav>
-      </div>
-      
-      {/* Desktop navigation */}
-      <nav className="hidden md:block border-t border-b border-news-200">
-        <div className="container-news">
-          <div className="flex justify-between space-x-6 overflow-x-auto py-2">
-            {navigation.map((item) => (
+        {!mobile ? (
+          <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
+            {categories.map((category) => (
               <Link
-                key={item.name}
-                to={item.href}
-                className="whitespace-nowrap text-news-700 hover:text-news-900 px-1 font-medium"
+                key={category.href}
+                to={category.href}
+                className={cn(
+                  "text-sm font-medium transition-colors",
+                  location.pathname === category.href
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
               >
-                {item.name}
+                {category.name}
               </Link>
             ))}
-          </div>
+            <Link
+              to="/admin"
+              className="text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
+            >
+              Admin
+            </Link>
+          </nav>
+        ) : null}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Search"
+            onClick={() => setSearchOpen(true)}
+          >
+            <Search className="h-5 w-5" />
+          </Button>
         </div>
-      </nav>
-      
-      {/* Search Dialog */}
-      <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+      </div>
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
-};
-
-export default Header;
+}

@@ -1,4 +1,3 @@
-
 import { Article } from '@/components/articles/ArticleCard';
 
 const generateRandomDate = (start: Date, end: Date) => {
@@ -26,7 +25,7 @@ export const mockArticles: Article[] = [
     category: 'Tech',
     author: 'Michael Chen',
     publishedAt: generateRandomDate(last30Days, new Date()),
-    imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1488591534298-04dcbce3278c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
     slug: 'tech-giants-new-eu-regulations',
   },
   {
@@ -177,4 +176,31 @@ export const getArticleBySlug = (slug: string): Article | undefined => {
 
 export const getFeaturedArticles = (): Article[] => {
   return mockArticles.slice(0, 5);
+};
+
+export const updateArticle = (updatedArticle: Article): boolean => {
+  const index = mockArticles.findIndex(article => article.id === updatedArticle.id);
+  if (index !== -1) {
+    mockArticles[index] = updatedArticle;
+    return true;
+  }
+  return false;
+};
+
+export const createArticle = (newArticle: Omit<Article, 'id'>): Article => {
+  const article: Article = {
+    ...newArticle,
+    id: String(mockArticles.length + 1)
+  };
+  mockArticles.push(article);
+  return article;
+};
+
+export const deleteArticle = (id: string): boolean => {
+  const index = mockArticles.findIndex(article => article.id === id);
+  if (index !== -1) {
+    mockArticles.splice(index, 1);
+    return true;
+  }
+  return false;
 };
