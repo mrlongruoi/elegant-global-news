@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -19,7 +18,7 @@ import {
   fetchArticles, 
   createArticle, 
   updateArticle as updateArticleInDb
-} from '@/services/supabaseArticleService';
+} from '@/services/articles';
 
 const categories = [
   'World', 'Politics', 'Business', 'Tech', 'Science', 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import HeroSection from '@/components/sections/HeroSection';
 import CategorySection from '@/components/sections/CategorySection';
-import { fetchLatestArticles, fetchArticlesByCategory } from '@/services/supabaseArticleService';
+import { fetchLatestArticles, fetchArticlesByCategory } from '@/services/articles';
 import { AnimatedContainer } from '@/components/ui/animated-container';
 import { motion } from 'framer-motion';
 import { pageTransitionVariants } from '@/lib/animations';

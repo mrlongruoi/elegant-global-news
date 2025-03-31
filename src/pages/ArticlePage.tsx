@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import Layout from '@/components/layout/Layout';
-import { fetchArticleBySlug, fetchLatestArticles } from '@/services/supabaseArticleService';
+import { fetchArticleBySlug, fetchLatestArticles } from '@/services/articles';
 import ArticleCard, { Article } from '@/components/articles/ArticleCard';
 
 const ArticlePage = () => {

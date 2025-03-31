@@ -21,7 +21,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from 'sonner';
-import { fetchArticles, deleteArticle } from '@/services/supabaseArticleService';
+import { fetchArticles, deleteArticle } from '@/services/articles';
 import { Article } from '@/components/articles/ArticleCard';
 
 const AdminArticleList = () => {

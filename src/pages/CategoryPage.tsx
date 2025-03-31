@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import ArticleCard, { Article } from '@/components/articles/ArticleCard';
-import { fetchArticlesByCategory } from '@/services/supabaseArticleService';
+import { fetchArticlesByCategory } from '@/services/articles';
 import { AnimatedContainer } from '@/components/ui/animated-container';
 import { motion } from 'framer-motion';
 import { cardHoverVariants, pageTransitionVariants } from '@/lib/animations';
