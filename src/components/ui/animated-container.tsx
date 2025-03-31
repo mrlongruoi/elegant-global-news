@@ -34,6 +34,9 @@ interface AnimatedContainerProps extends HTMLMotionProps<"div"> {
   };
 }
 
+// Define allowed props that are safe to pass to a regular div
+type RegularDivProps = Omit<React.HTMLAttributes<HTMLDivElement>, keyof HTMLMotionProps<"div">>;
+
 const AnimatedContainer = ({
   children,
   type = "fade",
@@ -64,6 +67,32 @@ const AnimatedContainer = ({
     }
   };
   
+  // Extract only the props that are safe to pass to a regular div
+  const extractRegularDivProps = (): RegularDivProps => {
+    // Creating a new object with only safe props
+    const safeProps: any = {};
+    
+    // Common props that are safe to pass to a regular div
+    const safeHtmlProps = [
+      'id', 'className', 'style', 'data-*', 'aria-*', 'role',
+      'onClick', 'onMouseEnter', 'onMouseLeave', 'tabIndex'
+    ];
+    
+    // Add only the safe props
+    Object.keys(props).forEach(key => {
+      if (safeHtmlProps.some(safeProp => {
+        if (safeProp.endsWith('*')) {
+          return key.startsWith(safeProp.slice(0, -1));
+        }
+        return key === safeProp;
+      })) {
+        safeProps[key] = (props as any)[key];
+      }
+    });
+    
+    return safeProps;
+  };
+  
   // Use Tailwind for animations if specified
   if (useTailwind) {
     // Handle staggered children with Tailwind
@@ -87,8 +116,10 @@ const AnimatedContainer = ({
       });
     };
 
+    const safeProps = extractRegularDivProps();
+    
     return (
-      <div className={cn(getTailwindAnimationClasses())} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
+      <div className={cn(getTailwindAnimationClasses())} {...safeProps}>
         {staggerChildren ? renderTailwindChildren() : children}
       </div>
     );
