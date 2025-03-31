@@ -1,7 +1,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { motion, MotionProps } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { 
   fadeAnimation, 
   scaleAnimation, 
@@ -15,7 +15,8 @@ import {
 type AnimationType = "fade" | "scale" | "slide" | "stagger" | "scroll";
 type Direction = "up" | "down" | "left" | "right" | "none";
 
-interface AnimatedContainerProps extends React.HTMLAttributes<HTMLDivElement>, MotionProps {
+// Using HTMLMotionProps<"div"> instead of extending both HTMLAttributes and MotionProps
+interface AnimatedContainerProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
   type?: AnimationType;
   direction?: Direction;
@@ -25,7 +26,6 @@ interface AnimatedContainerProps extends React.HTMLAttributes<HTMLDivElement>, M
   staggerDelay?: number;
   once?: boolean;
   distance?: number;
-  className?: string;
   useTailwind?: boolean; // Whether to use Tailwind or Framer Motion for animations
   viewport?: {
     once?: boolean;
