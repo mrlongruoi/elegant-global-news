@@ -5,6 +5,8 @@ import Layout from '@/components/layout/Layout';
 import ArticleCard from '@/components/articles/ArticleCard';
 import { getArticlesByCategory } from '@/services/articleService';
 import { AnimatedContainer } from '@/components/ui/animated-container';
+import { motion } from 'framer-motion';
+import { cardHoverVariants, pageTransitionVariants } from '@/lib/animations';
 
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
@@ -25,30 +27,47 @@ const CategoryPage = () => {
 
   return (
     <Layout>
-      <div className="container-news py-6">
+      <motion.div
+        className="container-news py-6"
+        variants={pageTransitionVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
         <AnimatedContainer type="fade" direction="up" duration={0.6}>
           <h1 className="news-title mb-8 border-b border-news-200 pb-4">{formattedCategory.toUpperCase()}</h1>
         </AnimatedContainer>
         
         {articles.length > 0 && (
           <AnimatedContainer type="fade" direction="up" duration={0.6} delay={0.2} className="mb-12">
-            <ArticleCard article={articles[0]} variant="large" />
+            <motion.div
+              variants={cardHoverVariants}
+              initial="initial"
+              whileHover="hover"
+            >
+              <ArticleCard article={articles[0]} variant="large" />
+            </motion.div>
           </AnimatedContainer>
         )}
         
         <AnimatedContainer 
-          type="fade" 
-          direction="up" 
-          delay={0.4}
+          type="stagger" 
           staggerChildren={true}
           staggerDelay={0.1}
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {articles.slice(1).map((article) => (
-            <ArticleCard key={article.id} article={article} variant="medium" />
+            <motion.div
+              key={article.id}
+              variants={cardHoverVariants}
+              initial="initial"
+              whileHover="hover"
+            >
+              <ArticleCard key={article.id} article={article} variant="medium" />
+            </motion.div>
           ))}
         </AnimatedContainer>
-      </div>
+      </motion.div>
     </Layout>
   );
 };

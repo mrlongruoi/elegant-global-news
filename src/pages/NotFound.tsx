@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import { AnimatedContainer } from '@/components/ui/animated-container';
+import { motion } from 'framer-motion';
+import { buttonHoverVariants } from '@/lib/animations';
 
 const NotFound = () => {
   return (
@@ -13,12 +15,19 @@ const NotFound = () => {
           Sorry, the page you are looking for does not exist.
         </p>
         <AnimatedContainer type="fade" direction="up" delay={0.3}>
-          <Link 
-            to="/" 
-            className="inline-block border border-news-900 px-6 py-3 text-news-900 hover:bg-news-900 hover:text-white transition-colors duration-300 hover:scale-105 transform"
+          <motion.div
+            variants={buttonHoverVariants}
+            initial="initial"
+            whileHover="hover"
+            whileTap="tap"
           >
-            Return to Home
-          </Link>
+            <Link 
+              to="/" 
+              className="inline-block border border-news-900 px-6 py-3 text-news-900 hover:bg-news-900 hover:text-white transition-colors duration-300"
+            >
+              Return to Home
+            </Link>
+          </motion.div>
         </AnimatedContainer>
       </AnimatedContainer>
     </Layout>
