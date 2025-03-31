@@ -14,7 +14,7 @@ const AdminLoginPage = () => {
   const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('admin@newsdaily.com');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -69,9 +69,11 @@ const AdminLoginPage = () => {
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@example.com"
+                  placeholder="admin@newsdaily.com"
                   required
+                  readOnly
                 />
+                <p className="text-xs text-muted-foreground">Admin email is fixed for this demo</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -81,12 +83,12 @@ const AdminLoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  autoFocus
                 />
               </div>
               <div className="text-sm text-muted-foreground">
-{/*                 <p>Demo credentials:</p>
+                <p>For this demo, you need to create a user in Supabase with:</p>
                 <p>Email: admin@newsdaily.com</p>
-                <p>Password: admin123</p> */}
               </div>
             </CardContent>
             <CardFooter>

@@ -1,17 +1,16 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Session, User } from '@supabase/supabase-js';
+import { toast } from 'sonner';
 
-// Define admin user credentials
-// In a real app, these would come from a database
-const ADMIN_CREDENTIALS = {
-  email: 'admin@newsdaily.com',
-  password: 'admin123',
-};
+// Define the admin email for easier reference and consistency
+const ADMIN_EMAIL = 'admin@newsdaily.com';
 
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: { email: string } | null;
+  user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
@@ -21,38 +20,88 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  // Check for existing session on mount
+  // Check for existing Supabase session on mount
   useEffect(() => {
-    const checkAuth = () => {
-      const storedUser = localStorage.getItem('adminUser');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-        setIsAuthenticated(true);
+    const checkAuth = async () => {
+      try {
+        // Get the current session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error checking auth:', error);
+          setIsLoading(false);
+          return;
+        }
+
+        if (session) {
+          setUser(session.user);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error('Auth error:', error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session) {
+          setUser(session.user);
+          setIsAuthenticated(true);
+        } else {
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      }
+    );
+
     checkAuth();
+
+    // Cleanup subscription on unmount
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simple email/password validation
-    if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
-      const userData = { email };
-      localStorage.setItem('adminUser', JSON.stringify(userData));
-      setUser(userData);
-      setIsAuthenticated(true);
-      return true;
+    try {
+      // Only allow the admin email to log in
+      if (email !== ADMIN_EMAIL) {
+        toast.error('Only admin users can log in');
+        return false;
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error('Login error:', error.message);
+        return false;
+      }
+
+      if (data.user) {
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-    return false;
   };
 
-  const logout = () => {
-    localStorage.removeItem('adminUser');
-    setUser(null);
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (

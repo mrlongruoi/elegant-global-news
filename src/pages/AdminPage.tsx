@@ -11,8 +11,8 @@ import { toast } from 'sonner';
 const AdminPage = () => {
   const { logout, user } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     toast.success('Logged out successfully');
   };
 
