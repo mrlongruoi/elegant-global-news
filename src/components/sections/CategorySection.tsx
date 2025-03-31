@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ArticleCard, { Article } from '../articles/ArticleCard';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AnimatedContainer } from '@/components/ui/animated-container';
 
 interface CategorySectionProps {
   title: string;
@@ -27,26 +28,26 @@ const CategorySection = ({ title, articles, viewAllLink, className }: CategorySe
         {viewAllLink && (
           <Link 
             to={viewAllLink} 
-            className="flex items-center text-sm font-medium text-news-600 hover:text-news-900 transition-colors"
+            className="flex items-center text-sm font-medium text-news-600 hover:text-news-900 transition-colors group"
           >
-            View All <ChevronRight className="h-4 w-4 ml-1" />
+            View All <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" />
           </Link>
         )}
       </div>
       
       <div className="grid grid-cols-1 gap-6">
         {/* Featured Article */}
-        <div className="mb-4">
+        <AnimatedContainer type="fade" direction="up" className="mb-4">
           <ArticleCard 
             article={featuredArticle} 
             variant="medium" 
             className="bg-white border-b border-news-100 pb-4"
             hideCategory={true}
           />
-        </div>
+        </AnimatedContainer>
         
         {/* Secondary Articles */}
-        <div className="space-y-5">
+        <AnimatedContainer type="fade" direction="up" delay={0.2} staggerChildren={true} staggerDelay={0.1} className="space-y-5">
           {secondaryArticles.map((article) => (
             <ArticleCard 
               key={article.id} 
@@ -55,7 +56,7 @@ const CategorySection = ({ title, articles, viewAllLink, className }: CategorySe
               hideCategory={true}
             />
           ))}
-        </div>
+        </AnimatedContainer>
       </div>
     </section>
   );

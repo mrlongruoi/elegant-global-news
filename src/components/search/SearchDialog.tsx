@@ -6,6 +6,8 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Button } from '@/components/ui/button';
 import { mockArticles } from '@/services/articleService';
+import { slideInAnimation } from '@/lib/animations';
+import { cn } from '@/lib/utils';
 
 interface SearchDialogProps {
   open: boolean;
@@ -88,7 +90,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 gap-0 max-w-3xl">
+      <DialogContent className={cn("p-0 gap-0 max-w-3xl", slideInAnimation({ direction: "up", duration: 0.3 }))}>
         <Command className="rounded-lg border-none">
           <div className="flex items-center border-b px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
@@ -104,7 +106,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
                 variant="ghost" 
                 size="icon" 
                 onClick={() => setSearchQuery('')}
-                className="h-8 w-8"
+                className="h-8 w-8 hover:scale-105 transition-transform"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -124,7 +126,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
                   <CommandItem
                     key={`recent-${index}`}
                     onSelect={() => handleSearchTermSelect(term)}
-                    className="cursor-pointer flex items-center justify-between"
+                    className="cursor-pointer flex items-center justify-between hover:bg-accent/50 transition-colors duration-200"
                   >
                     <div className="flex items-center">
                       <Search className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
@@ -137,17 +139,20 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
             
             {filteredArticles.length > 0 && (
               <CommandGroup heading="Articles">
-                {filteredArticles.map((article) => (
+                {filteredArticles.map((article, index) => (
                   <CommandItem
                     key={article.id}
                     onSelect={() => handleSelect(article.id)}
-                    className="flex items-start gap-3 p-3 cursor-pointer hover:bg-accent"
+                    className={cn(
+                      "flex items-start gap-3 p-3 cursor-pointer hover:bg-accent/50 transition-colors duration-200",
+                      slideInAnimation({ direction: "up", duration: 0.3, delay: 0.05 * index })
+                    )}
                   >
                     <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
                       <img 
                         src={article.imageUrl} 
                         alt={article.title} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                     <div className="flex flex-col gap-1 flex-1">
