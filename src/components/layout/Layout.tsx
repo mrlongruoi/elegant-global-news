@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="flex-grow pt-16" {/* Add padding-top to account for fixed header */}
+        className="flex-grow pt-16" // Add padding-top to account for fixed header
       >
         <AnimatedContainer type="fade" direction="up" duration={0.6} className="flex-grow">
           <main className="flex-grow">
