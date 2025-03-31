@@ -92,7 +92,7 @@ export const mockArticles: Article[] = [
   {
     id: '9',
     title: 'Novel Wins Prestigious Literary Prize, Sparking Cultural Debate',
-    summary: 'The unconventional winner of this year's top literary award has ignited conversations about changing standards in literature and representation in publishing.',
+    summary: 'The unconventional winner of this year\'s top literary award has ignited conversations about changing standards in literature and representation in publishing.',
     category: 'Culture',
     author: 'Thomas Moore',
     publishedAt: generateRandomDate(last30Days, new Date()),
@@ -132,7 +132,7 @@ export const mockArticles: Article[] = [
   {
     id: '13',
     title: 'Historic Election Reshapes Political Landscape',
-    summary: 'Voters have delivered a surprise result that will transform the country's governance, with implications for international alliances and domestic policy.',
+    summary: 'Voters have delivered a surprise result that will transform the country\'s governance, with implications for international alliances and domestic policy.',
     category: 'Politics',
     author: 'Alexander Hughes',
     publishedAt: generateRandomDate(last30Days, new Date()),
