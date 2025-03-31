@@ -88,10 +88,22 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
     setSearchQuery(term);
   };
 
-  // Hide the close button in the CommandInput to avoid duplication
+  // Use CSS to hide the close button instead of a prop
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn("p-0 gap-0 max-w-3xl", slideInAnimation({ direction: "up", duration: 0.3 }))} closeButtonClassName="hidden">
+      <DialogContent className={cn(
+        "p-0 gap-0 max-w-3xl", 
+        slideInAnimation({ direction: "up", duration: 0.3 }),
+        // Add a custom class to target the close button with CSS
+        "search-dialog-content"
+      )}>
+        <style>
+          {`
+            .search-dialog-content [data-radix-dialog-close] {
+              display: none;
+            }
+          `}
+        </style>
         <Command className="rounded-lg border-none">
           <CommandInput 
             placeholder="Search articles by title, content, or category..." 
